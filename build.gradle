@@ -9,16 +9,26 @@ repositories {
     name 'clojars.org'
     url  'http://clojars.org/repo'
   }
+  maven {
+    name 'cloudera'
+    url 'http://repository.cloudera.com/artifactory/cloudera-repos'
+  }
 }
 
 configurations {
   provided
   compile.extendsFrom provided
+  all*.exclude group: 'org.slf4j'
 }
 
 dependencies {
-  compile     'org.codehaus.groovy:groovy:2.2.2'
-  provided    'storm:storm:0.9.0.1'
+  compile  group:'org.apache.hadoop',   name:'hadoop-common', version:'2.0.0-cdh4.4.0'
+  compile  group:'org.apache.hadoop',   name:'hadoop-hdfs',   version:'2.0.0-cdh4.4.0'
+  compile  group:'org.codehaus.groovy', name:'groovy',        version:'2.2.2'
+  provided group:'storm',               name:'storm',         version:'0.9.0.1'
+  // Workaround for bug in commons-daemon 1.0.3, pulled in by hadoop-hdfs.
+  // http://wlangiewicz.com/2013/02/08/problem-with-commons-daemon-1-0-3-in-maven-central-repository/
+  compile(group:'commons-daemon', name:'commons-daemon', version:'1.0.5') { force=true }
 }
 
 jar {

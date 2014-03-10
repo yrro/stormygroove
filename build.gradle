@@ -1,0 +1,30 @@
+apply plugin:'groovy'
+
+sourceCompatibility = '1.6'
+targetCompatibility = '1.6'
+
+repositories {
+  mavenCentral()
+  maven {
+    name 'clojars.org'
+    url  'http://clojars.org/repo'
+  }
+}
+
+configurations {
+  provided
+  compile.extendsFrom provided
+}
+
+dependencies {
+  compile     'org.codehaus.groovy:groovy:2.2.2'
+  provided    'storm:storm:0.9.0.1'
+}
+
+jar {
+  from {
+    (configurations.runtime - configurations.provided).collect {
+      it.isDirectory() ? it : zipTree(it)
+    }
+  }
+}

@@ -9,14 +9,31 @@ import backtype.storm.topology.base.*
 import backtype.storm.task.*
 import backtype.storm.tuple.*
 
+import org.slf4j.LoggerFactory
+
 class HdfsBolt extends BaseRichBolt {
+  private static def logger = LoggerFactory.getLogger(HdfsBolt.class)
+
   private FileSystem fs
   private OutputCollector collector
   String output_path
 
+  static private def injectHadoopConf(Map storm_conf, String confkey, String name) {
+    String path = storm_conf[confkey]
+    try {
+      ResourceOverrideClassLoader.install name, path
+      logger.info "Using ${path} for ${name}"
+    } catch (IllegalArgumentException e) {
+      logger.warn "${confkey} unspecified; ${name} will be loaded from classpath", e
+    }
+  }
+
   @Override
   void prepare(Map storm_conf, TopologyContext context, OutputCollector collector) {
     this.collector = collector
+
+    injectHadoopConf storm_conf, 'topology.hadoop.conf.core', 'core-site.xml'
+    injectHadoopConf storm_conf, 'topology.hadoop.conf.hdfs', 'hdfs-site.xml'
 
     def hdfs_conf = new Configuration()
     fs = FileSystem.get(hdfs_conf)
@@ -27,7 +44,7 @@ class HdfsBolt extends BaseRichBolt {
   }
 
   def write(String message) {
-    def os = fs.create(new Path("${output_path}/${UUID.randomUUID()}"))
+    def os = fs.create(new Path("${output_path}/${UUID.randomUUID()}"), false)
     os << message
     os.close()
   }
@@ -43,5 +60,3 @@ class HdfsBolt extends BaseRichBolt {
     d.declare(new Fields("word"))
   }
 }
-
-

@@ -44,4 +44,8 @@ jar {
   }
 }
 
+task wrapper(type:Wrapper) {
+  gradleVersion = '1.11'
+}
+
 // vim: ft=groovy

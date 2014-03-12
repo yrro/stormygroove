@@ -19,7 +19,7 @@ class ResourceOverrideClassLoader extends ClassLoader {
   @Override
   URL findResource(String name) {
     if (name == this.name) {
-      logger.warn 'IT\'S HAPPENING', new Exception()
+      logger.warn "ResourceOverrideClassLoader found ${name}", new Exception('IT\'S HAPPENING')
     }
     return name == this.name ? this.url : null
   }

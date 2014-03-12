@@ -3,16 +3,16 @@ import backtype.storm.utils.*
 import backtype.storm.testing.*
 import backtype.storm.topology.*
 
-class HdfsTopology {
+class HbaseTopology {
   static def configure(List args) {
     if (args.size != 1) {
       return null
     }
 
     def conf = new Config()
-    conf['topology.output_path'] = args[0]
+    conf['topology.output_table'] = args[0]
     conf['topology.hadoop.conf.core'] = '/etc/hadoop/conf/core-site.xml'
-    conf['topology.hadoop.conf.hdfs'] = '/etc/hadoop/conf/hdfs-site.xml'
+    conf['topology.hbase.conf.hbase'] = '/etc/hbase/conf/hbase-site.xml'
     return conf
   }
 
@@ -21,13 +21,13 @@ class HdfsTopology {
     builder.with {
      setSpout "word", new TestWordSpout(), 2
      setBolt("exclaim1", new ExclaimationBolt(), 2).shuffleGrouping "word"
-     setBolt("output", new HdfsBolt(), 2).shuffleGrouping "exclaim1"
+     setBolt("output", new HbaseBolt(), 2).shuffleGrouping "exclaim1"
     }
     return builder
   }
 
   static void main(String[] args) {
-    def cli = new CliBuilder(usage:'storm jar stormygroove.jar HdfsTopology OUTPUT_DIR')
+    def cli = new CliBuilder(usage:'storm jar stormygroove.jar HbaseTopology OUTPUT_TABLE')
     cli.d('storm debug')
     cli.h('show help and exit')
     cli.l('run with LocalCluster')
@@ -39,7 +39,7 @@ class HdfsTopology {
       System.exit 0
     }
 
-    def name = opts.n ? opts.n : 'HdfsTopology'
+    def name = opts.n ? opts.n : 'HbaseTopology'
 
     def conf = configure(opts.arguments())
     if (conf == null) {

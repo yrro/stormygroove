@@ -29,6 +29,9 @@ dependencies {
     // http://wlangiewicz.com/2013/02/08/problem-with-commons-daemon-1-0-3-in-maven-central-repository/
     exclude group:'commons-daemon', module:'commons-daemon'
   }
+  compile(group:'org.apache.hbase', name:'hbase', version:'0.94.6-cdh4.4.0') {
+    exclude group:'org.slf4j', module:'slf4j-log4j12'
+  }
 
   provided group:'storm',               name:'storm',         version:'0.9.0.1'
 }

@@ -15,7 +15,7 @@ class HdfsBolt extends BaseRichBolt {
   private OutputCollector collector
   String output_path
 
-  static private def injectHadoopConf(Map storm_conf, String confkey, String name) {
+  static private injectHadoopConf(Map storm_conf, String confkey, String name) {
     String path = storm_conf[confkey]
     try {
       ResourceOverrideClassLoader.install name, path

@@ -4,7 +4,7 @@ import backtype.storm.testing.*
 import backtype.storm.topology.*
 
 class HbaseTopology {
-  static def configure(List args) {
+  static configure(List args) {
     if (args.size != 1) {
       return null
     }

@@ -24,7 +24,7 @@ class ResourceOverrideClassLoader extends ClassLoader {
     return name == this.name ? this.url : null
   }
 
-  static def install(String resource, String file) {
+  static install(String resource, String file) {
     if (resource == null || file == null)
       throw new IllegalArgumentException("${resource},${file}")
 

@@ -18,7 +18,7 @@ class HbaseBolt extends BaseRichBolt {
   private HTable table
   private OutputCollector collector
 
-  static private def injectHadoopConf(Map storm_conf, String confkey, String name) {
+  static private injectHadoopConf(Map storm_conf, String confkey, String name) {
     String path = storm_conf[confkey]
     try {
       ResourceOverrideClassLoader.install name, path

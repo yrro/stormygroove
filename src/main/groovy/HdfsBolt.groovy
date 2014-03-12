@@ -24,7 +24,7 @@ class HdfsBolt extends BaseRichBolt {
       ResourceOverrideClassLoader.install name, path
       logger.info "Using ${path} for ${name}"
     } catch (IllegalArgumentException e) {
-      logger.warn "${confkey} unspecified; ${name} will be loaded from classpath", e
+      logger.warn '{} unspecified; {} will be loaded from classpath', confkey, name
     }
   }
 

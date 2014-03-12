@@ -42,6 +42,7 @@ jar {
       it.isDirectory() ? it : zipTree(it)
     }
   }
+  entryCompression = 'STORED'
 }
 
 task wrapper(type:Wrapper) {

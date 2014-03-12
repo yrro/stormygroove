@@ -37,7 +37,7 @@ class HdfsBolt extends BaseRichBolt {
 
     output_path = storm_conf['topology.output_path']
     if (!output_path)
-      throw new Exception('missing output_path')
+      throw new IllegalArgumentException('missing output_path')
   }
 
   def write(String message) {

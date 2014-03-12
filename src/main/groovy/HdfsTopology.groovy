@@ -13,6 +13,8 @@ class HdfsTopology {
     conf['topology.output_path'] = args[0]
     conf['topology.hadoop.conf.core'] = '/etc/hadoop/conf/core-site.xml'
     conf['topology.hadoop.conf.hdfs'] = '/etc/hadoop/conf/hdfs-site.xml'
+    conf['topology.hadoop.user'] = 'storm'
+    conf['topology.hadoop.keytab'] = '/tmp/storm.keytab'
     return conf
   }
 

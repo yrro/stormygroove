@@ -1,5 +1,8 @@
-import org.apache.hadoop.conf.Configuration;
+import java.security.PrivilegedAction
+
+import org.apache.hadoop.conf.*
 import org.apache.hadoop.fs.*
+import org.apache.hadoop.security.*
 
 import backtype.storm.topology.*
 import backtype.storm.topology.base.*
@@ -11,9 +14,9 @@ import org.slf4j.LoggerFactory
 class HdfsBolt extends BaseRichBolt {
   private static def logger = LoggerFactory.getLogger(HdfsBolt.class)
 
-  private FileSystem fs
   private OutputCollector collector
   String output_path
+  UserGroupInformation ugi
 
   static private injectHadoopConf(Map storm_conf, String confkey, String name) {
     String path = storm_conf[confkey]
@@ -32,8 +35,14 @@ class HdfsBolt extends BaseRichBolt {
     injectHadoopConf storm_conf, 'topology.hadoop.conf.core', 'core-site.xml'
     injectHadoopConf storm_conf, 'topology.hadoop.conf.hdfs', 'hdfs-site.xml'
 
-    def hdfs_conf = new Configuration()
-    fs = FileSystem.get(hdfs_conf)
+    def user = storm_conf['topology.hadoop.user']
+    def keytab = storm_conf['topology.hadoop.keytab']
+    if ((user == null) != (keytab == null))
+      throw new IllegalArgumentException('missing hdfs user XOR keytab')
+    else if (user && keytab)
+      ugi = UserGroupInformation.loginUserFromKeytabAndReturnUGI(user, keytab)
+    else
+      ugi = UserGroupInformation.getCurrentUser()
 
     output_path = storm_conf['topology.output_path']
     if (!output_path)
@@ -41,9 +50,15 @@ class HdfsBolt extends BaseRichBolt {
   }
 
   def write(String message) {
-    def os = fs.create(new Path("${output_path}/${UUID.randomUUID()}"), false)
-    os << message
-    os.close()
+    ugi.doAs (new PrivilegedAction<Void>() {
+      public Void run() throws Exception {
+        def hdfs_conf = new Configuration()
+        def fs = FileSystem.get(hdfs_conf)
+        def os = fs.create(new Path("${output_path}/${UUID.randomUUID()}"), false)
+        os << message
+        os.close()
+      }
+    })
   }
 
   @Override

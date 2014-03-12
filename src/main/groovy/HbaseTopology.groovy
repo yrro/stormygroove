@@ -13,6 +13,8 @@ class HbaseTopology {
     conf['topology.output_table'] = args[0]
     conf['topology.hadoop.conf.core'] = '/etc/hadoop/conf/core-site.xml'
     conf['topology.hbase.conf.hbase'] = '/etc/hbase/conf/hbase-site.xml'
+    conf['topology.hadoop.user'] = 'storm'
+    conf['topology.hadoop.keytab'] = '/tmp/storm.keytab'
     return conf
   }
 

@@ -28,9 +28,8 @@ class ResourceOverrideClassLoader extends ClassLoader {
     if (resource == null || file == null)
       throw new IllegalArgumentException("${resource},${file}")
 
-    def loader = new ResourceOverrideClassLoader(
-        Thread.currentThread().getContextClassLoader(),
-        resource, new File(file).toURI().toURL())
-    Thread.currentThread().setContextClassLoader loader
+    Thread.currentThread().setContextClassLoader new ResourceOverrideClassLoader(
+      Thread.currentThread().getContextClassLoader(),
+      resource, new File(file).toURI().toURL())
   }
 }

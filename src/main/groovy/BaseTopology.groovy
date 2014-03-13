@@ -9,11 +9,13 @@ abstract class BaseTopology {
 
   void run(String[] args) {
     def cli = new CliBuilder(usage:"storm jar stormygroove.jar ${getClass().getName()} [OPTIONS] [TOPOLOGY ARGS...]")
-    cli.d('storm debug')
-    cli.h('show help and exit')
-    cli.l('run with LocalCluster', args:1, argName:'timeout')
-    cli.n('topology name', args:1, argName:'name')
-    cli.w('storm worker count', args:1, argName:'count')
+    cli.with {
+      d('storm debug')
+      h('show help and exit')
+      l('run with LocalCluster', args:1, argName:'timeout')
+      n('topology name', args:1, argName:'name')
+      w('storm worker count', args:1, argName:'count')
+    }
     def opts = cli.parse(args)
     if (opts.h) {
       cli.usage()

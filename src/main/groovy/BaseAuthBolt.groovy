@@ -9,13 +9,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 abstract class BaseAuthBolt extends BaseRichBolt {
-  protected Logger logger
-
   private UserGroupInformation ugi
-
-  BaseAuthBolt() {
-    logger = LoggerFactory.getLogger(getClass().getName())
-  }
 
   def asUser (Closure cl) {
     ugi.reloginFromKeytab()

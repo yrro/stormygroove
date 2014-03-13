@@ -1,4 +1,5 @@
-import java.security.PrivilegedAction
+import java.security.PrivilegedExceptionAction
+import java.security.PrivilegedActionException
 
 import org.apache.hadoop.conf.*
 import org.apache.hadoop.fs.*
@@ -49,15 +50,23 @@ class HdfsBolt extends BaseRichBolt {
       throw new IllegalArgumentException('missing output_path')
   }
 
+  def asUser (Closure cl) {
+    try {
+      ugi.doAs(cl as PrivilegedExceptionAction)
+    } catch (PrivilegedActionException e) {
+      throw e.cause
+    }
+  }
+
   def write(String message) {
     ugi.reloginFromKeytab()
-    ugi.doAs({
+    asUser {
       def hdfs_conf = new Configuration()
       def fs = FileSystem.get(hdfs_conf)
       def os = fs.create(new Path("${output_path}/${UUID.randomUUID()}"), false)
       os << message
       os.close()
-    } as PrivilegedAction)
+    }
   }
 
   @Override

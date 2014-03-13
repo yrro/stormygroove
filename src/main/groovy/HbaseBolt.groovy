@@ -1,4 +1,5 @@
-import java.security.PrivilegedAction
+import java.security.PrivilegedExceptionAction
+import java.security.PrivilegedActionException
 
 import org.apache.hadoop.hbase.client.*
 import org.apache.hadoop.hbase.*
@@ -53,16 +54,24 @@ class HbaseBolt extends BaseRichBolt {
       throw new IllegalArgumentException('missing output_table')
   }
 
+  def asUser (Closure cl) {
+    try {
+      ugi.doAs(cl as PrivilegedExceptionAction)
+    } catch (PrivilegedActionException e) {
+      throw e.cause
+    }
+  }
+
   def write(String message) {
     ugi.reloginFromKeytab()
-    ugi.doAs({
+    asUser {
       def hbase_conf = HBaseConfiguration.create()
       def table = new HTable(hbase_conf, output_table)
       def p = new Put(UUID.randomUUID().toString().getBytes('US-ASCII'))
       p.add ('cf1'.getBytes('US-ASCII'), 'word'.getBytes('US-ASCII'), message.getBytes('UTF-8'))
       table.put p
       table.flushCommits()
-    } as PrivilegedAction)
+    }
   }
 
   @Override

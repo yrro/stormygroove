@@ -3,7 +3,7 @@ import backtype.storm.topology.*
 import backtype.storm.topology.base.*
 import backtype.storm.tuple.*
 
-class ExclaimationBolt extends BaseRichBolt {
+class ExclamationBolt extends BaseRichBolt {
   private OutputCollector o
 
   @Override

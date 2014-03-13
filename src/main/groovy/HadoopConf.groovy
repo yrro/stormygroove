@@ -7,9 +7,10 @@ class HadoopConf {
     String path = storm_conf[confkey]
     try {
       ResourceOverrideClassLoader.install filename, path
-      logger.info "Using {} for {}", path, filename
     } catch (IllegalArgumentException e) {
       logger.warn '{} unspecified; {} will be loaded from classpath', confkey, filename
+      return
     }
+    logger.info "Using {} for {}", path, filename
   }
 }

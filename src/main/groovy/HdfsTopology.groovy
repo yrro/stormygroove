@@ -32,7 +32,7 @@ class HdfsTopology {
     def cli = new CliBuilder(usage:'storm jar stormygroove.jar HdfsTopology OUTPUT_DIR')
     cli.d('storm debug')
     cli.h('show help and exit')
-    cli.l('run with LocalCluster')
+    cli.l('run with LocalCluster', args:1, argName:'timeout')
     cli.n('topology name', args:1, argName:'name')
     cli.w('storm worker count', args:1, argName:'count')
     def opts = cli.parse(args)
@@ -58,7 +58,7 @@ class HdfsTopology {
     if (opts.l) {
       def cluster = new LocalCluster()
       cluster.submitTopology(name, conf, topology)
-      Utils.sleep(10000)
+      Utils.sleep(1000L * opts.l.toInteger())
       cluster.killTopology(name)
       cluster.shutdown()
     } else {

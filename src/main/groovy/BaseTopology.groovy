@@ -3,9 +3,9 @@ import backtype.storm.topology.*
 import backtype.storm.utils.*
 
 abstract class BaseTopology {
-  abstract Config configure(List args);
+  abstract Config configure(List args)
 
-  abstract TopologyBuilder build();
+  abstract TopologyBuilder build()
 
   void run(String[] args) {
     def cli = new CliBuilder(usage:"storm jar stormygroove.jar ${getClass().getName()} [OPTIONS] [TOPOLOGY ARGS...]")

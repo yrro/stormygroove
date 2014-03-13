@@ -2,9 +2,9 @@ import org.apache.hadoop.conf.*
 import org.apache.hadoop.fs.*
 import org.apache.hadoop.security.*
 
+import backtype.storm.task.*
 import backtype.storm.topology.*
 import backtype.storm.topology.base.*
-import backtype.storm.task.*
 import backtype.storm.tuple.*
 
 import org.slf4j.LoggerFactory
@@ -14,12 +14,13 @@ class HdfsBolt extends BaseAuthBolt {
   String output_path
 
   @Override
-  void prepare(Map storm_conf, TopologyContext context, OutputCollector collector) {
+  void preparePre(Map storm_conf, TopologyContext context, OutputCollector collector) {
     HadoopConf.inject this, storm_conf, 'topology.hadoop.conf.core', 'core-site.xml'
     HadoopConf.inject this, storm_conf, 'topology.hadoop.conf.hdfs', 'hdfs-site.xml'
+  }
 
-    prepareAuth(storm_conf['topology.hadoop.user'], storm_conf['topology.hadoop.keytab'])
-
+  @Override
+  void preparePost(Map storm_conf, TopologyContext context, OutputCollector collector) {
     this.collector = collector
 
     output_path = storm_conf['topology.output_path']

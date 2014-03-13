@@ -1,4 +1,4 @@
-import org.slf4j.LoggerFactory
+import org.slf4j.*
 
 class HadoopConf {
   static def inject(Object client, Map storm_conf, String confkey, String filename) {

@@ -1,13 +1,8 @@
-import org.apache.hadoop.conf.*
-import org.apache.hadoop.fs.*
-import org.apache.hadoop.security.*
-
 import backtype.storm.task.*
 import backtype.storm.topology.*
-import backtype.storm.topology.base.*
 import backtype.storm.tuple.*
-
-import org.slf4j.LoggerFactory
+import org.apache.hadoop.conf.*
+import org.apache.hadoop.fs.*
 
 class HdfsBolt extends BaseAuthBolt {
   private OutputCollector collector

@@ -1,4 +1,4 @@
-import org.slf4j.LoggerFactory
+import org.slf4j.*
 
 /**
  * This custom classloader injects our hadoop configuration files into all

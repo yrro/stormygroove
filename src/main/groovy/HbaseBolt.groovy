@@ -1,13 +1,8 @@
-import org.apache.hadoop.hbase.client.*
-import org.apache.hadoop.hbase.*
-import org.apache.hadoop.security.*
-
 import backtype.storm.task.*
 import backtype.storm.topology.*
-import backtype.storm.topology.base.*
 import backtype.storm.tuple.*
-
-import org.slf4j.LoggerFactory
+import org.apache.hadoop.hbase.*
+import org.apache.hadoop.hbase.client.*
 
 /**
  * Create the HBase table with `hbase shell`:

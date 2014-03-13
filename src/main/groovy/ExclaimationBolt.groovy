@@ -1,6 +1,6 @@
+import backtype.storm.task.*
 import backtype.storm.topology.*
 import backtype.storm.topology.base.*
-import backtype.storm.task.*
 import backtype.storm.tuple.*
 
 class ExclaimationBolt extends BaseRichBolt {

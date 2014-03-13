@@ -1,14 +1,8 @@
-import java.security.PrivilegedExceptionAction
-import java.security.PrivilegedActionException
-
 import backtype.storm.task.*
-import backtype.storm.topology.*
 import backtype.storm.topology.base.*
-
 import org.apache.hadoop.security.*
 
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import java.security.*
 
 abstract class BaseAuthBolt extends BaseRichBolt {
   private UserGroupInformation ugi

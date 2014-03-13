@@ -54,7 +54,9 @@ class HbaseBolt extends BaseRichBolt {
   }
 
   def write(String message) {
+    ugi.reloginFromKeytab()
     ugi.doAs (new PrivilegedAction<Void>() {
+      @Override
       public Void run() throws Exception {
         def hbase_conf = HBaseConfiguration.create()
         def table = new HTable(hbase_conf, output_table)

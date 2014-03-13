@@ -50,7 +50,9 @@ class HdfsBolt extends BaseRichBolt {
   }
 
   def write(String message) {
+    ugi.reloginFromKeytab()
     ugi.doAs (new PrivilegedAction<Void>() {
+      @Override
       public Void run() throws Exception {
         def hdfs_conf = new Configuration()
         def fs = FileSystem.get(hdfs_conf)

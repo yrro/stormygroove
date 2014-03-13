@@ -55,17 +55,14 @@ class HbaseBolt extends BaseRichBolt {
 
   def write(String message) {
     ugi.reloginFromKeytab()
-    ugi.doAs (new PrivilegedAction<Void>() {
-      @Override
-      public Void run() throws Exception {
-        def hbase_conf = HBaseConfiguration.create()
-        def table = new HTable(hbase_conf, output_table)
-        def p = new Put(UUID.randomUUID().toString().getBytes('US-ASCII'))
-        p.add ('cf1'.getBytes('US-ASCII'), 'word'.getBytes('US-ASCII'), message.getBytes('UTF-8'))
-        table.put p
-        table.flushCommits()
-      }
-    })
+    ugi.doAs({
+      def hbase_conf = HBaseConfiguration.create()
+      def table = new HTable(hbase_conf, output_table)
+      def p = new Put(UUID.randomUUID().toString().getBytes('US-ASCII'))
+      p.add ('cf1'.getBytes('US-ASCII'), 'word'.getBytes('US-ASCII'), message.getBytes('UTF-8'))
+      table.put p
+      table.flushCommits()
+    } as PrivilegedAction)
   }
 
   @Override

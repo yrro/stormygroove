@@ -10,14 +10,14 @@ class ResourceOverrideClassLoader extends ClassLoader {
 
   private def name, url
 
-  ResourceOverrideClassLoader(ClassLoader parent, String name, URL url) {
+  private ResourceOverrideClassLoader(ClassLoader parent, String name, URL url) {
     super(parent)
     this.name = name
     this.url = url
   }
 
   @Override
-  URL findResource(String name) {
+  protected URL findResource(String name) {
     if (name == this.name) {
       logger.debug 'ResourceOverrideClassLoader found {}', name, new Exception('IT\'S HAPPENING')
     }

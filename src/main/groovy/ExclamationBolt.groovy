@@ -22,5 +22,3 @@ class ExclamationBolt extends BaseRichBolt {
     d.declare(new Fields("word"))
   }
 }
-
-
